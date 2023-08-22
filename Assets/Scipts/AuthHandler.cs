@@ -16,6 +16,7 @@ public class AuthHandler : MonoBehaviour
     TMP_InputField UsernameInputField;
     TMP_InputField PasswordInputField;
     [SerializeField] TMP_InputField ScoreInputField;
+    [SerializeField] TMP_InputField UserScoreInputField;
 
     private string Token;
     private string Username;
@@ -65,7 +66,9 @@ public class AuthHandler : MonoBehaviour
     public void PatchingScore()
     {
         DataUser dataUser = new DataUser();
+        Username = UserScoreInputField.text;
         dataUser.score = int.Parse(ScoreInputField.text);
+
 
         string json = JsonUtility.ToJson(dataUser);
         StartCoroutine(PatchScore(json, Username));
@@ -96,7 +99,7 @@ public class AuthHandler : MonoBehaviour
     }
     IEnumerator PatchScore(string json, string username)
     {
-        UnityWebRequest request = UnityWebRequest.Get(ApiUrl + "usuarios" + username);
+        UnityWebRequest request = UnityWebRequest.Get(ApiUrl + "usuarios/" + username);
         request.SetRequestHeader("x-token", Token);
         request.method = "PATCH";
         yield return request.SendWebRequest();
