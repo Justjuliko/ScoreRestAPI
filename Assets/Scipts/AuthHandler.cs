@@ -125,6 +125,7 @@ public class AuthHandler : MonoBehaviour
     IEnumerator GetProfile(string username)
     {
         UnityWebRequest request = UnityWebRequest.Get(ApiUrl + "usuarios/" + username);
+        request.SetRequestHeader("Content-Type", "application/json");
         request.SetRequestHeader("x-token", Token);
         yield return request.SendWebRequest();
 
