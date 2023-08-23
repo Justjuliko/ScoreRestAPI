@@ -20,6 +20,8 @@ public class AuthHandler : MonoBehaviour
     [SerializeField] TMP_InputField UserScoreInputField;
     [SerializeField] RawImage UserStatus;
 
+    public List<TextMeshProUGUI> scoreList;
+
     private string Token;
     private string Username;
 
@@ -92,7 +94,13 @@ public class AuthHandler : MonoBehaviour
             if (request.responseCode == 200)
             {
                 AuthData data = JsonUtility.FromJson<AuthData>(request.downloadHandler.text);
-                
+
+                var descendingUsers = data.usuarios.OrderByDescending(u => u.data.score).ToArray();
+
+                for (int i = 0; i < scoreList.Count; i++)
+                {
+                    scoreList[i].text = descendingUsers[i].username + " Puntaje: " + descendingUsers[i].data.score;
+                }
             }
             else
             {
