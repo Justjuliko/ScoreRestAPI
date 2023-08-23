@@ -7,6 +7,7 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class AuthHandler : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class AuthHandler : MonoBehaviour
     TMP_InputField PasswordInputField;
     [SerializeField] TMP_InputField ScoreInputField;
     [SerializeField] TMP_InputField UserScoreInputField;
+    [SerializeField] RawImage UserStatus;
 
     private string Token;
     private string Username;
@@ -141,6 +143,7 @@ public class AuthHandler : MonoBehaviour
                 AuthData data = JsonUtility.FromJson<AuthData>(request.downloadHandler.text);
                 Debug.Log("Sesion activa del usuario " + data.usuario.username);
                 Debug.Log("Su puntaje es " + data.usuario.data.score);
+                UserStatus.color = new Color(0, 255, 0);
             }
             else
             {
