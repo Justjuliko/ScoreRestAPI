@@ -67,13 +67,14 @@ public class AuthHandler : MonoBehaviour
     }
     public void PatchingScore()
     {
-        DataUser dataUser = new DataUser();
-        Username = UserScoreInputField.text;
-        dataUser.score = int.Parse(ScoreInputField.text);
+        ScoreSend scoreSend = new ScoreSend();
+        scoreSend.data = new DataUser();
 
+        scoreSend.username = Username;
+        scoreSend.data.score = int.Parse(ScoreInputField.text);
 
-        string json = JsonUtility.ToJson(dataUser);
-        StartCoroutine(PatchScore(json, Username));
+        string json = JsonUtility.ToJson(scoreSend);
+        StartCoroutine(PatchScore(json));
     }
     IEnumerator GetUsers()
     {
@@ -91,7 +92,7 @@ public class AuthHandler : MonoBehaviour
             if (request.responseCode == 200)
             {
                 AuthData data = JsonUtility.FromJson<AuthData>(request.downloadHandler.text);
-                Debug.Log(data.usuarios);
+                
             }
             else
             {
@@ -99,11 +100,12 @@ public class AuthHandler : MonoBehaviour
             }
         }
     }
-    IEnumerator PatchScore(string json, string username)
+    IEnumerator PatchScore(string json)
     {
-        UnityWebRequest request = UnityWebRequest.Get(ApiUrl + "usuarios/" + username);
-        request.SetRequestHeader("x-token", Token);
+        UnityWebRequest request = UnityWebRequest.Put(ApiUrl + "usuarios", json);
+        request.SetRequestHeader("Content-Type", "application/json");
         request.method = "PATCH";
+        request.SetRequestHeader("x-token", Token);
         yield return request.SendWebRequest();
 
         if (request.isNetworkError)
@@ -231,5 +233,11 @@ public class User
 public class DataUser
 {
     public int score;
-    public User[] friends;
+}
+
+[System.Serializable]
+public class ScoreSend
+{
+    public string username;
+    public DataUser data;
 }
